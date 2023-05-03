@@ -1,0 +1,46 @@
+#!/bin/bash
+#########################
+# HELPERS
+#########################
+
+git_checkout_tool() {
+  REPO=$1
+  CLONE_PATH=$2
+  GIT_REF=$3
+  if [[ ! -d $CLONE_PATH || -z "$(git -C $CLONE_PATH rev-parse --is-inside-work-tree)" ]]; then
+    git clone $REPO $CLONE_PATH
+  fi
+
+  if [[ "$GIT_REF" != "$(git -C $CLONE_PATH rev-parse HEAD)" ]]; then
+    git -C $CLONE_PATH checkout $GIT_REF
+  fi
+}
+
+maybe_brew_install() {
+  brew list $1 &> /dev/null || (echo "Installing $1" && brew install $1)
+}
+
+#########################
+# HOMEBREW
+#########################
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+if [[ ! "$(command -v brew)" ]]; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+maybe_brew_install neovim
+maybe_brew_install ripgrep
+maybe_brew_install livekit-cli
+maybe_brew_install pure  # prompt plugin for zsh
+maybe_brew_install zsh
+
+#########################
+# NERD FONTS
+#########################
+{{ if eq .chezmoi.os "linux" -}}
+FONT_PATH=$HOME/.local/share/fonts
+mkdir -p $FONT_PATH
+if [[ -z "$(fc-list | grep Sauce)" ]]; then
+  (cd ~/.local/share/fonts/ && wget -O - -o /dev/null https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/SourceCodePro.zip | jar -xv)
+fi
+{{ end -}}

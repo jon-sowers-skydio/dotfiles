@@ -1,0 +1,20 @@
+[user]
+  name = Jon Sowers
+  email = jon.sowers@skydio.com
+[color]
+  ui = auto
+[core]
+  excludesfile = ~/.gitignore_global
+[alias]
+  st = status -s
+  cl = clone
+  co = checkout
+  br = branch
+  cp = cherry-pick
+  gr = grep -Ii
+  diff = diff --word-diff
+  ls = log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%an]" --decorate --date=relative
+[commit]
+  template = ~/.gitmessage
+[url "https://github.com/"]
+  insteadOf = git@github.com:
