@@ -29,7 +29,6 @@ export PATH=$PATH:$AIRCAM_ROOT/build/python3_venv/bin
 export PATH=$PATH:$AIRCAM_ROOT/build/host_aircam/bin
 
 export PATH=$PATH:~/.local/bin
-export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
 
 export EDITOR=nvim
 
