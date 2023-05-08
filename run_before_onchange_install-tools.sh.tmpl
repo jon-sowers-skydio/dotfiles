@@ -17,7 +17,10 @@ git_checkout_tool() {
 }
 
 maybe_brew_install() {
-  brew list $1 &> /dev/null || (echo "Installing $1" && brew install $1)
+  for var in "$@"
+  do
+    brew list $var &> /dev/null || (echo "Installing $var" && brew install $var)
+  done
 }
 
 #########################
@@ -28,11 +31,15 @@ if [[ ! "$(command -v brew)" ]]; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-maybe_brew_install neovim
-maybe_brew_install ripgrep
-maybe_brew_install livekit-cli
-maybe_brew_install pure  # prompt plugin for zsh
-maybe_brew_install zsh
+maybe_brew_install \
+      gum \
+      livekit-cli \
+      neovim \
+      pure \
+      ripgrep \
+      virtualenv \
+      websocat \
+      zsh
 
 #########################
 # NERD FONTS
@@ -44,3 +51,20 @@ if [[ -z "$(fc-list | grep Sauce)" ]]; then
   (cd ~/.local/share/fonts/ && wget -O - -o /dev/null https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.0/SourceCodePro.zip | jar -xv)
 fi
 {{ end -}}
+
+########################
+# KUBERNETES
+if [[ ! -f $HOME/.krew/bin/kubectl-krew ]]; then
+  echo "Installing krew"
+  (
+    set -x; cd "$(mktemp -d)" &&
+    OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+    ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+    KREW="krew-${OS}_${ARCH}" &&
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+    tar zxvf "${KREW}.tar.gz" &&
+    ./"${KREW}" install krew
+  )
+fi
+
+
