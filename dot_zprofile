@@ -1,2 +1,2 @@
-export SHELL=/bin/zsh
 export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
+export SHELL=$(command -v zsh)
